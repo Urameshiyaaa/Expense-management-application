@@ -79,7 +79,7 @@ export const loginWithGoogle = async (req: Request, res: Response) => {
       audience: process.env.GOOGLE_CLIENT_ID,
     });
     
-    ggUserData = authRes.getggUserData();
+    ggUserData = authRes.getPayload();
     if(!ggUserData){
       return res.status(400).json({message: 'Token Google không hợp lệ'});
     }

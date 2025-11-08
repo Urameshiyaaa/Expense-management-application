@@ -10,4 +10,4 @@ export const pool = new Pool({
   port: parseInt(process.env.DB_PORT || '5432')
 });
 
-export const query = (sql: string, filledData? : any[]) => pool.query(sql, filledData);
+export const query = (sql: string, filledData?: any[]) => pool.query(sql, filledData);
