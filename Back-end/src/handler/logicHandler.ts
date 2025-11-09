@@ -15,6 +15,23 @@ const createToken = (userId: string) => {
 export const register = async (req: Request, res: Response) => {
   try{
     const {email, password, fullName} = req.body;
+
+    if (password.length < 8) {
+      return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 8 kí tự.'});
+    }
+    if (!/[A-Z]/.test(password)) {
+      return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 1 chữ in hoa.'});
+    }
+    if (!/[a-z]/.test(password)) {
+      return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 1 chữ in thường.'});
+    }
+    if (!/[0-9]/.test(password)) {
+      return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 1 chữ số.'});
+    }
+    if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 1 kí tự đặc biệt.'});
+    }
+
     const existingUser = await query('SELECT * FROM "expenseManagementApp".users WHERE email = $1', [email]);
     if(existingUser.rows.length > 0){
       return res.status(400).json({ message: 'Email đã tồn tại.' });
