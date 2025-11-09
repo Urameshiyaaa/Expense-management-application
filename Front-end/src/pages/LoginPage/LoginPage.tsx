@@ -39,6 +39,7 @@ const LoginPage = () => {
   const handleGoogle = async (credentialResponse: CredentialResponse) => { 
     setError(null);
 
+
     if (credentialResponse.credential) {
       try {
         const data = await loginWithGoogleToken(credentialResponse.credential);
@@ -48,6 +49,7 @@ const LoginPage = () => {
       catch (err: any) {
         console.error(err);
         setError(err.response?.data?.message || 'Đăng nhập Google thất bại.');
+    
       }
     } 
     else {
