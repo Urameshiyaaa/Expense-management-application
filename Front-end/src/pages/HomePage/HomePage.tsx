@@ -1,5 +1,6 @@
 import Header from '../../components/Header/Header';
-
+import ExpenseSection from '../../components/ExpenseSection';
+import BudgetSection from '../../components/BudgetSection';
 
 const HomePage = () => {
   return (
@@ -9,6 +10,8 @@ const HomePage = () => {
         <h2>Chào mừng bạn đến với Ứng dụng Quản lý chi tiêu!</h2>
         {/* *Note: Sau khi code xong các component + logic tính toán thì các ông cho các component đó
          vào thư mục components, và import, gọi các component đó ở chỗ này (ý là vị trí tôi ghi cái note này* */}
+         <ExpenseSection />
+         <BudgetSection />
       </main>
     </div>
   );

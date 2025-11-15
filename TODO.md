@@ -1,0 +1,4 @@
+- [x] Update transactionApi.js to include update method
+- [x] Update ExpenseSection.tsx to integrate API, add edit functionality, include date field
+- [x] Update BudgetSection.tsx to integrate API, support monthly budgets
+- [x] Test the application by running front-end and back-end
