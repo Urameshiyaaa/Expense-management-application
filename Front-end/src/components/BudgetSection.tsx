@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import budgetApi from '../API/budgetApi';
 import './ExpenseBudget.css';
+import { useAuth } from '../authentication/AuthState';
 
 interface Budget {
   budget_id: number;
@@ -12,15 +13,16 @@ interface Budget {
 const BudgetSection = () => {
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [newBudget, setNewBudget] = useState({ limit_amount: '', budget_month: '' });
-  const userId = 1; // Hardcoded for simplicity
+  const { user } = useAuth();
 
   useEffect(() => {
-    fetchBudgets();
-  }, []);
+    if (user) fetchBudgets();
+  }, [user]);
 
   const fetchBudgets = async () => {
+    if (!user) return;
     try {
-      const res = await budgetApi.getAll(userId);
+      const res = await budgetApi.getAll(user.user_id);
       setBudgets(res.data);
     } catch (err) {
       console.error(err);
@@ -30,7 +32,7 @@ const BudgetSection = () => {
   const addBudget = async () => {
     if (!newBudget.limit_amount || !newBudget.budget_month) return alert('Nhập đủ thông tin!');
     try {
-      await budgetApi.create({ ...newBudget, user_id: userId });
+      await budgetApi.create({ ...newBudget, user_id: user.user_id });
       fetchBudgets();
       setNewBudget({ limit_amount: '', budget_month: '' });
     } catch (err) {
@@ -69,7 +71,15 @@ const BudgetSection = () => {
       <ul className="list-box">
         {budgets.map(b => (
           <li key={b.budget_id}>
-            <b>{b.budget_month}</b> - {b.limit_amount.toLocaleString()}đ
+            {/*Đức: fix định dạng time (ngày giờ)+ tiền (dấu chấm phân chia) để dễ nhìn với user*/}
+            <b>{new Date(b.budget_month).toLocaleString('vi-VN', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false
+                    })}</b>{Number(b.limit_amount).toLocaleString("vi-VN")}đ 
             <button onClick={() => deleteBudget(b.budget_id)}>X</button>
           </li>
         ))}
