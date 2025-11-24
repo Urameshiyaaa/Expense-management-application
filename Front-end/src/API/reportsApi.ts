@@ -1,3 +1,4 @@
+// src/api/reportsApi.ts
 import axios from 'axios';
 
 export interface CategoryData {
@@ -25,6 +26,3 @@ export const getMonthlyReport = (userId: number, year: number, month: number) =>
 
 export const getYearlyReport = (userId: number, year: number) =>
   axios.get<YearlyReportData[]>('/api/reports/yearly', { params: { userId, year } });
-
-export const getBudgetAlert = (userId: number, year: number, month: number) =>
-  axios.get('/api/reports/alerts/budget-exceeded', { params: { userId, year, month } });

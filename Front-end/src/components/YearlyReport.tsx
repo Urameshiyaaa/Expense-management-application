@@ -1,47 +1,43 @@
 // src/components/YearlyReport.tsx
 import React, { useEffect, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { getYearlyReport } from '../api/reportsApi';
-import '../styles/dashboard.css';
 
-interface MonthlyData {
-  month: string;
-  spent: number;
-  budget: number;
-  overBudget: number;
-}
+type YearItem = { month: number; spent: number; budget: number | null; overrun: number };
 
-interface YearlyReportProps {
-  userId: number;
-  year: number;
-  stackedGradient?: boolean;
-}
-
-export const YearlyReport: React.FC<YearlyReportProps> = ({ userId, year }) => {
-  const [data, setData] = useState<MonthlyData[]>([]);
-  const COLORS = ['#0088FE', '#52C41A', '#FF4D4F'];
+export const YearlyReport: React.FC<{ userId: number; year: number }> = ({ userId, year }) => {
+  const [data, setData] = useState<YearItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     getYearlyReport(userId, year)
-      .then(res => setData(res.data || []))
-      .catch(console.error);
+      .then(res => setData(res.data))
+      .catch(err => { console.error(err); setData([]); })
+      .finally(() => setLoading(false));
   }, [userId, year]);
+
+  if (loading) return <div>Đang tải...</div>;
+  if (!data.length) return <div>Không có dữ liệu</div>;
+
+  const chartData = data.map(d => ({ ...d, monthLabel: String(d.month).padStart(2, '0') }));
 
   return (
     <div>
-      <h3>Chi tiêu theo tháng năm {year}</h3>
-      <ResponsiveContainer width="100%" height={350}>
-        <BarChart data={data} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
+      <ResponsiveContainer width="100%" height={360}>
+        <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="month" />
+          <XAxis dataKey="monthLabel" />
           <YAxis />
-          <Tooltip formatter={(value: number) => `${value.toLocaleString()} VNĐ`} />
+          <Tooltip formatter={(v: number) => `${v.toLocaleString()} VNĐ`} />
           <Legend />
-          <Bar dataKey="spent" stackId="a" fill={COLORS[0]} />
-          <Bar dataKey="budget" stackId="a" fill={COLORS[1]} />
-          <Bar dataKey="overBudget" stackId="a" fill={COLORS[2]} />
+          <Bar dataKey="spent" name="Đã chi" fill="#0088FE" />
+          <Bar dataKey="budget" name="Định mức" fill="#52C41A" />
+          <Bar dataKey="overrun" name="Vượt" fill="#FF4D4F" />
         </BarChart>
       </ResponsiveContainer>
     </div>
   );
 };
+
+export default YearlyReport;
