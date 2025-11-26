@@ -6,6 +6,7 @@ import {type MonthlyReportData, getMonthlyReport} from '../../API/reportsApi'; /
 import './ReportPage.css';
 import Header from '../../components/Header/Header';
 import bgImage from '../../others/Illustration/KiritaniHarukaBirthday.webp';
+import Footer from '../../components/Footer/Footer';
 
 
 const ReportPage: React.FC = () => {
@@ -83,6 +84,9 @@ const ReportPage: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      <Footer/>
+      
     </div>
   );
 };
