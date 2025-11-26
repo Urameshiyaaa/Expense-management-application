@@ -153,7 +153,7 @@ const ExpenseSection = () => {
                 <button onClick={() => setEditing(null)}>Hủy</button>
               </div>
             ) : (
-              <div style={{color: "#414141"}}>
+              <div style={{color: "#000000ff"}}>
                 {/*Đức: fix định dạng time (ngày giờ)+ tiền (dấu chấm phân chia) để dễ nhìn với user*/}
                 <b>{t.category_name}</b> - {Number(t.amount).toLocaleString('vi-VN')}đ ({t.note}) - {new Date(t.transaction_date).toLocaleString('vi-VN', {
                       day: '2-digit',

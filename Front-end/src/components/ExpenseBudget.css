@@ -1,10 +1,12 @@
 .section-box {
-    background: silver;
-    border: 1px solid #ddd;
+    background-image: linear-gradient(#bebebe80, #bebebe80);
+    border: 1px solid #504646;
     border-radius: 10px;
     padding: 16px;
     margin-bottom: 20px;
     box-shadow: 0 2px 5px #00000010;
+    margin-top: 25px;
+    box-shadow: 0 6px 6px 0 rgba(0, 0, 0, 0.2);
   }
   
   .section-box h3 {
@@ -45,13 +47,23 @@
   .list-box {
     list-style: none;
     padding: 0;
+    /*Đức: Thêm thanh cuộn khi list quá dài*/
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    border-radius: 8px;
   }
+  /*Đức: Làm đẹp thanh cuộn*/
+  .list-box::-webkit-scrollbar {width: 8px;}
+  .list-box::-webkit-scrollbar-track {background: #f1f1f1; border-radius: 4px;}
+  .list-box::-webkit-scrollbar-thumb {background: #c1c1c1; border-radius: 4px;}
+  .list-box::-webkit-scrollbar-thumb:hover {background: #a8a8a8;}
   
   .list-box li {
     display: flex;
     justify-content: space-between;
     padding: 6px 0;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #151414;
     color: #414141;
   }
   

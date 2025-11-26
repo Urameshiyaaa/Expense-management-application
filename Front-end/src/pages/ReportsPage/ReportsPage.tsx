@@ -2,8 +2,11 @@
 import React, { useState, useEffect } from 'react';
 import { MonthlyReport } from '../../components/MonthlyReport';
 import { YearlyReport } from '../../components/YearlyReport';
-import { type MonthlyReportData, getMonthlyReport } from '../../API/reportsApi'; //Đức: fix import
+import {type MonthlyReportData, getMonthlyReport} from '../../API/reportsApi'; //Đức: fix import
 import './ReportPage.css';
+import Header from '../../components/Header/Header';
+import bgImage from '../../others/Illustration/KiritaniHarukaBirthday.webp';
+
 
 const ReportPage: React.FC = () => {
   //Đức: Fix userId, lấy userId lưu trong localStorage
@@ -15,7 +18,6 @@ const ReportPage: React.FC = () => {
   const month = new Date().getMonth() + 1;
 
   const [isMobile, setIsMobile] = useState<boolean>(() => typeof window !== 'undefined' ? window.innerWidth < 768 : false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [monthlyData, setMonthlyData] = useState<MonthlyReportData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,54 +36,49 @@ const ReportPage: React.FC = () => {
   }, [userId, year, month]);
 
   return (
-    <div className="dashboard-wrapper" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <div className="dashboard-navbar">
-        <span>Expense Dashboard</span>
-        {!isMobile && (
-          <button aria-label="Toggle sidebar" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>☰</button>
-        )}
-      </div>
+    <div style={{
+      width: '100%',
+      minHeight: '100vh',
+      backgroundImage:`linear-gradient(rgba(81, 108, 139, 0.5), rgba(79, 103, 133, 0.5)),url(${bgImage})`,
+      backgroundSize: 'cover',    
+      backgroundRepeat: 'no-repeat',
+      backgroundAttachment: 'fixed'
+    }}>
+      <Header/>
+      <div className="dashboard-wrapper" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        {/*Đức: Fix giao diện, xóa thanh công cụ cũ, thay mới */}
+      
+        <div style={{ display: 'flex', flex: 1 }}>
+          
+          <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', color:'black' }}>
+            <h1 style={{ marginBottom: '1.5rem', color:'#1877f2'}}>Báo cáo Chi tiêu</h1>
 
-      <div style={{ display: 'flex', flex: 1 }}>
-        {!isMobile && (
-          <div className={`dashboard-sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
-            <ul>
-              <li>Dashboard</li>
-              <li>Transactions</li>
-              <li>Budgets</li>
-              <li>Categories</li>
-            </ul>
-          </div>
-        )}
+            {loading && <div>Đang tải báo cáo...</div>}
+            {error && <div style={{ color: 'red' }}>{error}</div>}
 
-        <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', color:'black' }}>
-          <h1 style={{ marginBottom: '1.5rem', color:'white'}}>Dashboard Báo cáo Chi tiêu</h1>
+            {monthlyData && monthlyData.overBudget > 0 && (
+              <div className="dashboard-alert" role="alert">
+                <span>⚠️</span>
+                <span>Bạn đã vượt định mức {monthlyData.overBudget.toLocaleString()} VNĐ!</span>
+              </div>
+            )}
 
-          {loading && <div>Đang tải báo cáo...</div>}
-          {error && <div style={{ color: 'red' }}>{error}</div>}
+            {monthlyData && (
+              <div className={`dashboard-cards ${isMobile ? 'column' : 'row'}`}>
+                <div className="dashboard-card"><h4>Tổng chi tháng</h4><p>{monthlyData.monthTotal.toLocaleString()} VNĐ</p></div>
+                <div className="dashboard-card"><h4>Định mức</h4><p>{(monthlyData.budget || 0).toLocaleString()} VNĐ</p></div>
+                <div className="dashboard-card"><h4>Chi vượt</h4><p>{monthlyData.overBudget.toLocaleString()} VNĐ</p></div>
+                <div className="dashboard-card"><h4>Tiết kiệm</h4><p>{((monthlyData.budget || 0) - monthlyData.monthTotal).toLocaleString()} VNĐ</p></div>
+              </div>
+            )}
 
-          {monthlyData && monthlyData.overBudget > 0 && (
-            <div className="dashboard-alert" role="alert">
-              <span>⚠️</span>
-              <span>Bạn đã vượt định mức {monthlyData.overBudget.toLocaleString()} VNĐ!</span>
-            </div>
-          )}
-
-          {monthlyData && (
-            <div className={`dashboard-cards ${isMobile ? 'column' : 'row'}`}>
-              <div className="dashboard-card"><h4>Tổng chi tháng</h4><p>{monthlyData.monthTotal.toLocaleString()} VNĐ</p></div>
-              <div className="dashboard-card"><h4>Định mức</h4><p>{(monthlyData.budget || 0).toLocaleString()} VNĐ</p></div>
-              <div className="dashboard-card"><h4>Chi vượt</h4><p>{monthlyData.overBudget.toLocaleString()} VNĐ</p></div>
-              <div className="dashboard-card"><h4>Tiết kiệm</h4><p>{((monthlyData.budget || 0) - monthlyData.monthTotal).toLocaleString()} VNĐ</p></div>
-            </div>
-          )}
-
-          <div className="dashboard-grid">
-            <div className="chart-container">
-              <MonthlyReport userId={userId} year={year} month={month} />
-            </div>
-            <div className="chart-container">
-              <YearlyReport userId={userId} year={year} />
+            <div className="dashboard-grid">
+              <div className="chart-container">
+                <MonthlyReport userId={userId} year={year} month={month} />
+              </div>
+              <div className="chart-container">
+                <YearlyReport userId={userId} year={year} />
+              </div>
             </div>
           </div>
         </div>
