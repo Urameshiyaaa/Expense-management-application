@@ -1,5 +1,5 @@
 // src/services/reportService.ts
-import pool from '../db';
+import {pool} from '../database/dbAccess.js';  //Đức: fix import
 
 export async function getMonthlyReport(userId: number, year: number, month: number) {
   const start = `${year}-${String(month).padStart(2, '0')}-01`;
@@ -8,8 +8,9 @@ export async function getMonthlyReport(userId: number, year: number, month: numb
 
   // total spent in month
   const totalQ = await pool.query(
+    //Đức: Fix chuẩn lại tên schemas
     `SELECT COALESCE(SUM(amount),0) AS total
-     FROM transactions
+     FROM "expenseManagementApp".transactions
      WHERE user_id = $1
        AND transaction_date::date BETWEEN $2::date AND $3::date`,
     [userId, start, end]
@@ -18,8 +19,9 @@ export async function getMonthlyReport(userId: number, year: number, month: numb
 
   // budget for the month
   const budgetQ = await pool.query(
+    //Đức: Fix chuẩn lại tên schemas
     `SELECT limit_amount
-     FROM budgets
+     FROM "expenseManagementApp".budgets
      WHERE user_id = $1
        AND date_trunc('month', budget_month) = date_trunc('month', $2::date)
      LIMIT 1`,
@@ -31,9 +33,10 @@ export async function getMonthlyReport(userId: number, year: number, month: numb
 
   // spending by category
   const catQ = await pool.query(
+    //Đức: Fix chuẩn lại tên schemas
     `SELECT COALESCE(c.name, 'Uncategorized') AS category, COALESCE(SUM(t.amount),0) AS amount
-     FROM transactions t
-     LEFT JOIN categories c ON t.category_id = c.category_id
+     FROM "expenseManagementApp".transactions t
+     LEFT JOIN "expenseManagementApp".categories c ON t.category_id = c.category_id
      WHERE t.user_id = $1
        AND t.transaction_date::date BETWEEN $2::date AND $3::date
      GROUP BY c.name
@@ -47,16 +50,18 @@ export async function getMonthlyReport(userId: number, year: number, month: numb
 
 export async function getYearlyReport(userId: number, year: number) {
   const spentQ = await pool.query(
+    //Đức: Fix chuẩn lại tên schemas
     `SELECT EXTRACT(MONTH FROM transaction_date)::int AS month, COALESCE(SUM(amount),0) AS spent
-     FROM transactions
+     FROM "expenseManagementApp".transactions
      WHERE user_id = $1 AND EXTRACT(YEAR FROM transaction_date)::int = $2
      GROUP BY month`,
     [userId, year]
   );
 
   const budgetQ = await pool.query(
+    //Đức: Fix chuẩn lại tên schemas
     `SELECT EXTRACT(MONTH FROM budget_month)::int AS month, limit_amount
-     FROM budgets
+     FROM "expenseManagementApp".budgets
      WHERE user_id = $1 AND EXTRACT(YEAR FROM budget_month)::int = $2`,
     [userId, year]
   );

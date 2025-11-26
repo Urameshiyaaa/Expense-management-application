@@ -1,6 +1,6 @@
 // src/controllers/reportController.ts
 import { Request, Response } from 'express';
-import { getMonthlyReport, getYearlyReport, getBudgetExceededAlert } from '../services/reportService';
+import { getMonthlyReport, getYearlyReport, getBudgetExceededAlert } from '../services/reportService.js';
 
 export const monthlyReport = async (req: Request, res: Response) => {
   try {

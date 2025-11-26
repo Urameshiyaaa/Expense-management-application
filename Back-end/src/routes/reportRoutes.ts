@@ -1,6 +1,6 @@
 // src/routes/reportRoutes.ts
 import { Router } from 'express';
-import { monthlyReport, yearlyReport, budgetExceededAlert } from '../controllers/reportController';
+import { monthlyReport, yearlyReport, budgetExceededAlert } from '../controllers/reportController.js';
 
 const router = Router();
 

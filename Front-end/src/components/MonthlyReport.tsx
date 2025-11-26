@@ -1,7 +1,7 @@
 // src/components/MonthlyReport.tsx
 import React, { useEffect, useState } from 'react';
 import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
-import { getMonthlyReport } from '../api/reportsApi';
+import { getMonthlyReport } from '../API/reportsApi'; //Đức: fix import
 
 type Category = { category: string; amount: number };
 type MonthlyResp = {
@@ -18,25 +18,30 @@ export const MonthlyReport: React.FC<{ userId: number; year: number; month: numb
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A52A2A', '#8A2BE2', '#FF1493'];
 
   useEffect(() => {
+    console.log("Check dữ liệu gửi đi", { userId, year, month }); //Đức: debug
     setLoading(true);
     getMonthlyReport(userId, year, month)
-      .then(res => setData(res.data))
-      .catch(err => { console.error(err); setData(null); })
+      .then((res: { data: React.SetStateAction<MonthlyResp | null>; }) => setData(res.data))
+      .catch((err: any) => { console.error(err); setData(null); })
       .finally(() => setLoading(false));
   }, [userId, year, month]);
 
+  console.log("Dữ liệu nhận được:", data) //Đức: debug
   if (loading) return <div>Đang tải...</div>;
   if (!data) return <div>Không có dữ liệu</div>;
 
   return (
     <div>
       <div style={{ marginBottom: 12 }}>
-        <div style={{ fontSize: 20, fontWeight: 600 }}>Tổng chi: {data.monthTotal.toLocaleString()} VNĐ</div>
-        <div style={{ color: '#666' }}>
-          Định mức: {data.budget !== null ? `${data.budget.toLocaleString()} VNĐ` : 'Chưa có'} {' '}
-          {data.pctOfBudget !== null && ` · ${data.pctOfBudget}%`}
+        <div style={{ fontSize: 20, fontWeight: 600 }}>
+            Tổng chi: {(data.monthTotal || 0).toLocaleString()} VNĐ
         </div>
-        {data.overBudget > 0 && (
+
+        <div style={{ color: '#666' }}>
+          Định mức: {typeof data.budget === 'number' ? `${data.budget.toLocaleString()} VNĐ` : 'Chưa có'} {' '}
+          {typeof data.pctOfBudget === 'number' && ` · ${data.pctOfBudget}%`}
+        </div>
+        {(data.overBudget || 0) > 0 && (
           <div style={{
             marginTop: 8,
             background: '#fff4f4',
@@ -46,7 +51,7 @@ export const MonthlyReport: React.FC<{ userId: number; year: number; month: numb
             color: '#a8071a',
             fontWeight: 700
           }}>
-            ⚠️ Vượt định mức {data.overBudget.toLocaleString()} VNĐ
+            ⚠️ Vượt định mức {(data.overBudget || 0).toLocaleString()} VNĐ
           </div>
         )}
       </div>
@@ -56,7 +61,7 @@ export const MonthlyReport: React.FC<{ userId: number; year: number; month: numb
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie data={data.byCategory} dataKey="amount" nameKey="category" outerRadius={100} label>
-                {data.byCategory.map((entry, idx) => <Cell key={idx} fill={COLORS[idx % COLORS.length]} />)}
+                {data.byCategory.map((_entry, idx) => <Cell key={idx} fill={COLORS[idx % COLORS.length]} />)}
               </Pie>
               <Tooltip formatter={(v: number) => `${v.toLocaleString()} VNĐ`} />
               <Legend />

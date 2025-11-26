@@ -1,5 +1,6 @@
 // src/api/reportsApi.ts
-import axios from 'axios';
+import axiosClient from './axiosClient'; //Đức: Fix import
+
 
 export interface CategoryData {
   category: string;
@@ -20,9 +21,9 @@ export interface YearlyReportData {
   budget: number;
   overrun: number;
 }
-
+//Đức: Fix phương thức get của axiosClient
 export const getMonthlyReport = (userId: number, year: number, month: number) =>
-  axios.get<MonthlyReportData>('/api/reports/monthly', { params: { userId, year, month } });
+  axiosClient.get<MonthlyReportData>('/reports/monthly', { params: { userId, year, month } });
 
 export const getYearlyReport = (userId: number, year: number) =>
-  axios.get<YearlyReportData[]>('/api/reports/yearly', { params: { userId, year } });
+  axiosClient.get<YearlyReportData[]>('/reports/yearly', { params: { userId, year } });

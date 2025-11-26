@@ -6,17 +6,10 @@
   --warning-color: #faad14;
   --sidebar-bg: #001529;
   --navbar-height: 60px;
-  --card-bg: #fff;
+  --card-bg: #ccc;
   --card-radius: 12px;
   --card-shadow: 0 6px 20px rgba(0,0,0,0.15);
   --grid-gap: 2rem;
-}
-
-body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f0f2f5;
-  color: #000;
 }
 
 .dashboard-navbar {

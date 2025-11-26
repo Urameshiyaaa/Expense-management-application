@@ -1,7 +1,7 @@
 // src/components/YearlyReport.tsx
 import React, { useEffect, useState } from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { getYearlyReport } from '../api/reportsApi';
+import { getYearlyReport } from '../API/reportsApi';
 
 type YearItem = { month: number; spent: number; budget: number | null; overrun: number };
 
@@ -12,8 +12,8 @@ export const YearlyReport: React.FC<{ userId: number; year: number }> = ({ userI
   useEffect(() => {
     setLoading(true);
     getYearlyReport(userId, year)
-      .then(res => setData(res.data))
-      .catch(err => { console.error(err); setData([]); })
+      .then((res: { data: React.SetStateAction<YearItem[]>; }) => setData(res.data))
+      .catch((err: any) => { console.error(err); setData([]); })
       .finally(() => setLoading(false));
   }, [userId, year]);
 
