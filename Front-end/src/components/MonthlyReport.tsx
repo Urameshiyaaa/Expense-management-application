@@ -68,7 +68,7 @@ export const MonthlyReport: React.FC<{ userId: number; year: number; month: numb
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie 
-                data={chartData} 
+                data={chartData}
                 dataKey="spent" // Dùng 'spent' thay vì 'amount'
                 nameKey="category_name" // Dùng 'category_name'
                 cx="50%" 
@@ -124,7 +124,7 @@ export const MonthlyReport: React.FC<{ userId: number; year: number; month: numb
                               🔥 Vượt {Number(cat.over_amount).toLocaleString()} đ
                             </span>
                           ) : (
-                            <span style={{ color: '#52c41a' }}>
+<span style={{ color: '#52c41a' }}>
                               ✅ Còn dư (dùng {percentUsage.toFixed(0)}%)
                             </span>
                           )}

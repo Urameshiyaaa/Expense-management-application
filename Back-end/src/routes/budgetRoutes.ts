@@ -1,3 +1,4 @@
+
 import express from 'express';
 import { pool } from '../database/dbAccess.js';
 
@@ -9,7 +10,7 @@ router.get('/:user_id', async (req, res) => {
     const { user_id } = req.params;
     const result = await pool.query(
       // JOIN với bảng categories để lấy tên danh mục (c.name)
-      //Đức: fix lại tên schemas
+      
       `SELECT b.*, c.name as category_name
        FROM "expenseManagementApp".budgets b
        JOIN "expenseManagementApp".categories c ON b.category_id = c.category_id
