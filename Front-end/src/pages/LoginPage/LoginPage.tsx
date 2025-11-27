@@ -71,10 +71,11 @@ const LoginPage = () => {
             <form onSubmit={handleSubmit}>
               <input
                 type="text"
-                placeholder="Tên đăng nhập"
+                placeholder="Tên đăng nhập (Email)"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                style={{color:"black"}}
               />
               <input
                 type="password"
@@ -82,6 +83,7 @@ const LoginPage = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                style={{color:"black"}}
               />
               <button type="submit" className="login-button">
                 Đăng nhập

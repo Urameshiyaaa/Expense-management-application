@@ -1,0 +1,128 @@
+.register-page {
+  background-image: linear-gradient(#1a1a1a80, #1b1b1b80), url('../../others/Illustration/Shinonome Ena.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+.register-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 20px;
+  gap: 24px;
+}
+
+.register-header-section {
+  text-align: center;
+  max-width: 800px;
+}
+
+.register-title {
+  color: #ffffff;
+  font-size: 48px;
+  font-weight: 900;
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+  text-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.6);
+}
+
+.register-subtitle {
+  font-size: 18px;
+  color: #f0f0f0;
+  font-weight: 500;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  background-color: rgba(0, 0, 0, 0.3);
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 50px;
+  backdrop-filter: blur(4px);
+}
+
+.register-form {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2), 0 20px 48px rgba(0, 0, 0, 0.2); 
+  padding: 40px; 
+  width: 100%;
+  max-width: 500px; 
+  box-sizing: border-box;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {transform: translateY(20px); opacity: 0;}
+  to {transform: translateY(0); opacity: 1;}
+}
+
+.register-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; 
+}
+
+.register-form input {
+  width: 100%;
+  font-size: 16px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid #dddfe2;
+  box-sizing: border-box;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.register-form input:focus {
+  outline: none;
+  border-color: #3b3b6d; 
+  box-shadow: 0 0 0 3px rgba(59, 59, 109, 0.2);
+}
+
+.btn-register {
+  background-color: #3b3b6d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  margin-top: 10px;
+}
+
+.btn-register:hover {
+  background-color: #2a2a4d;
+}
+
+.btn-register:active {
+  transform: scale(0.98);
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 24px 0;
+}
+
+.link-login {
+  color: #3b3b6d;
+  font-size: 15px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 600;
+  display: block;
+}
+
+.link-login:hover {
+  text-decoration: underline;
+  color: #15155d;
+}
