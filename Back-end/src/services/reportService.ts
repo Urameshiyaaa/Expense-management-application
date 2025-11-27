@@ -1,52 +1,78 @@
 // src/services/reportService.ts
 import {pool} from '../database/dbAccess.js';  //Đức: fix import
 
-export async function getMonthlyReport(userId: number, year: number, month: number) {
-  const start = `${year}-${String(month).padStart(2, '0')}-01`;
-  const lastDay = new Date(year, month, 0).getDate();
-  const end = `${year}-${String(month).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
 
-  // total spent in month
-  const totalQ = await pool.query(
-    //Đức: Fix chuẩn lại tên schemas
-    `SELECT COALESCE(SUM(amount),0) AS total
-     FROM "expenseManagementApp".transactions
-     WHERE user_id = $1
-       AND transaction_date::date BETWEEN $2::date AND $3::date`,
-    [userId, start, end]
-  );
-  const monthTotal = parseFloat(totalQ.rows[0].total || 0);
 
-  // budget for the month
-  const budgetQ = await pool.query(
-    //Đức: Fix chuẩn lại tên schemas
-    `SELECT limit_amount
-     FROM "expenseManagementApp".budgets
-     WHERE user_id = $1
-       AND date_trunc('month', budget_month) = date_trunc('month', $2::date)
-     LIMIT 1`,
-    [userId, start]
-  );
-  const budget = budgetQ.rowCount ? parseFloat(budgetQ.rows[0].limit_amount) : null;
-  const pctOfBudget = (budget && budget > 0) ? Math.round((monthTotal / budget) * 10000) / 100 : null;
-  const overBudget = (budget && monthTotal > budget) ? (monthTotal - budget) : 0;
 
-  // spending by category
-  const catQ = await pool.query(
-    //Đức: Fix chuẩn lại tên schemas
-    `SELECT COALESCE(c.name, 'Uncategorized') AS category, COALESCE(SUM(t.amount),0) AS amount
-     FROM "expenseManagementApp".transactions t
-     LEFT JOIN "expenseManagementApp".categories c ON t.category_id = c.category_id
-     WHERE t.user_id = $1
-       AND t.transaction_date::date BETWEEN $2::date AND $3::date
-     GROUP BY c.name
-     ORDER BY amount DESC`,
-    [userId, start, end]
-  );
-  const byCategory = catQ.rows.map((r: any) => ({ category: r.category, amount: parseFloat(r.amount) }));
+import { query } from '../database/dbAccess.js';
 
-  return { monthTotal, budget, pctOfBudget, overBudget, byCategory };
-}
+export const getMonthlyReport = async (userId: number, year: number, month: number) => {
+  // 1. Xác định ngày đầu tháng và cuối tháng
+  const startDate = `${year}-${month.toString().padStart(2, '0')}-01`;
+  
+  // Xác định ngày cuối tháng (bằng cách lấy ngày 0 của tháng sau)
+  const nextMonth = new Date(year, month, 0);
+  const endDate = `${year}-${month.toString().padStart(2, '0')}-${nextMonth.getDate()} 23:59:59`;
+
+  // Xác định budget_month (ngày 1 của tháng)
+  const budgetMonthDate = startDate;
+
+  // 2. Câu lệnh SQL "Thần thánh" (Lấy tất cả trong 1 lần)
+  // - Lấy danh mục
+  // - Tổng chi tiêu của danh mục đó trong khoảng thời gian (JOIN transactions)
+  // - Ngân sách của danh mục đó trong tháng (JOIN budgets)
+  const sql = `
+    WITH CategoryStats AS (
+      SELECT 
+        c.category_id,
+        c.name as category_name,
+        COALESCE(SUM(t.amount), 0) as spent,
+        COALESCE(b.limit_amount, 0) as budget
+      FROM "expenseManagementApp".categories c
+      LEFT JOIN "expenseManagementApp".transactions t 
+        ON c.category_id = t.category_id 
+        AND t.user_id = $1 
+        AND t.transaction_date >= $2 
+        AND t.transaction_date <= $3
+      LEFT JOIN "expenseManagementApp".budgets b 
+        ON c.category_id = b.category_id 
+        AND b.user_id = $1 
+        AND b.budget_month = $4
+      WHERE c.user_id = $1 OR c.user_id IS NULL
+      GROUP BY c.category_id, c.name, b.limit_amount
+    )
+    SELECT 
+      *,
+      (spent - budget) as over_amount
+    FROM CategoryStats
+    ORDER BY spent DESC
+  `;
+
+  const result = await query(sql, [userId, startDate, endDate, budgetMonthDate]);
+  const categories = result.rows;
+
+  // 3. Tính toán số liệu tổng hợp từ danh sách danh mục
+  let monthTotal = 0;
+  let totalBudget = 0;
+
+  categories.forEach(cat => {
+    monthTotal += Number(cat.spent);
+    totalBudget += Number(cat.budget);
+  });
+
+  // Chi vượt tổng (Chỉ tính nếu tổng chi > tổng ngân sách)
+  const overBudget = Math.max(monthTotal - totalBudget, 0);
+
+  return {
+    monthTotal,
+    budget: totalBudget, // Đây là tổng ngân sách các danh mục cộng lại
+    overBudget,
+    categories // Trả về thêm danh sách chi tiết để hiển thị
+  };
+};
+
+// (Giữ nguyên các hàm getYearlyReport, getBudgetExceededAlert cũ của bạn nếu có)
+// ...
 
 export async function getYearlyReport(userId: number, year: number) {
   const spentQ = await pool.query(
