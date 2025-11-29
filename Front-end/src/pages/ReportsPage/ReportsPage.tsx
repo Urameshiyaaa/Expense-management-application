@@ -5,7 +5,7 @@ import { YearlyReport } from '../../components/YearlyReport';
 import {type MonthlyReportData, getMonthlyReport} from '../../API/reportsApi'; //Đức: fix import
 import './ReportPage.css';
 import Header from '../../components/Header/Header';
-import bgImage from '../../others/Illustration/KiritaniHarukaBirthday.webp';
+import bgImage from '../../others/Illustration/MizukiAkiyama.jpg';
 import Footer from '../../components/Footer/Footer';
 
 
@@ -38,12 +38,14 @@ const ReportPage: React.FC = () => {
 
   return (
     <div style={{
-      width: '100%',
-      minHeight: '100vh',
-      backgroundImage:`linear-gradient(rgba(81, 108, 139, 0.5), rgba(79, 103, 133, 0.5)),url(${bgImage})`,
-      backgroundSize: 'cover',    
-      backgroundRepeat: 'no-repeat',
-      backgroundAttachment: 'fixed'
+          width: '100%',
+          minHeight: '100vh',
+          backgroundImage:`linear-gradient(#516c8b80, #4f678580),url(${bgImage})`,
+          backgroundSize: 'cover',    
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+          display: 'flex',      
+          flexDirection: 'column'
     }}>
       <Header/>
       <div className="dashboard-wrapper" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
@@ -52,7 +54,7 @@ const ReportPage: React.FC = () => {
         <div style={{ display: 'flex', flex: 1 }}>
           
           <div style={{ flex: 1, padding: '2rem', overflowY: 'auto', color:'black' }}>
-            <h1 style={{ marginBottom: '1.5rem', color:'#1877f2'}}>Báo cáo Chi tiêu</h1>
+              <h1 className="page-title">Báo cáo Chi tiêu</h1>
 
             {loading && <div>Đang tải báo cáo...</div>}
             {error && <div style={{ color: 'red' }}>{error}</div>}

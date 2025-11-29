@@ -1,6 +1,5 @@
 .app-header {
-  background-color: silver;
-  border-bottom: 1px solid #dbdbdb;
+  background-color: #001529;
   box-shadow: 0 2px 4px #0000000d;
   padding: 0 24px;
   height: 60px;
@@ -43,7 +42,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%; 
-  background-color: #1877f2;
+  background-color: #0c4083;
   color: white;
   display: flex;
   justify-content: center;
@@ -56,7 +55,7 @@
 }
 .user-avt-text:hover {
   transform: scale(1.1);
-  border-color: #1877f2;
+  border-color: #0c4083;
 }
 
 
@@ -71,7 +70,7 @@
   align-items: center;
   transition: background 0.3s;
 }
-.menu-btn:hover {background-color: #110e0e33;}
+.menu-btn:hover {background-color: rgba(255, 255, 255, 0.2);}
 .menu-btn:focus {outline: none;}
 
 .app-sidebar {
@@ -80,8 +79,8 @@
   left: -260px;
   width: 260px;
   height: 100vh;
-  background-color:#7a7979;
-  color: #111111;
+  background-color:#001529;
+  color: #fff;
   z-index: 2000;
   transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 4px 0 10px rgba(0,0,0,0.2);
@@ -97,14 +96,14 @@
   align-items: center;
   justify-content: space-between;
   padding: 0 20px;
-  background-color: silver;
+  background-color: #002140;
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .close-btn {
   background: none;
   border: none;
-  color: #111111;
+  color: #fff;
   font-size: 24px;
   cursor: pointer;
 }
@@ -120,7 +119,7 @@
   display: flex;
   align-items: center;
   padding: 14px 24px;
-  color: #111111;
+  color: #fff;
   text-decoration: none;
   font-size: 16px;
   transition: all 0.2s;

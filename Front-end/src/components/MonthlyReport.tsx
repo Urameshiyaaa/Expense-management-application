@@ -87,7 +87,8 @@ export const MonthlyReport: React.FC<{ userId: number; year: number; month: numb
         {/* --- PHẦN 2: DANH SÁCH CHI TIẾT (CÓ BÁO VƯỢT) --- */}
         <div style={{ flex: 1, minWidth: '300px' }}>
           <h4 style={{marginBottom: 10, borderBottom: '1px solid #eee', paddingBottom: 5}}>Chi tiết danh mục</h4>
-          <div style={{ maxHeight: '260px', overflowY: 'auto', paddingRight: 5 }}>
+          <div style={{ maxHeight: '260px', overflowY: 'auto', paddingRight: 5 }}
+                className='listCategory'>
             <ul style={{ padding: 0, margin: 0, listStyle: 'none' }}>
               {data.categories.map((cat, i) => {
                 const isOver = cat.over_amount > 0;

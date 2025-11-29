@@ -77,20 +77,23 @@ export async function getYearlyReport(userId: number, year: number) {
   );
 
   const budgetQ = await pool.query(
-    `SELECT EXTRACT(MONTH FROM budget_month)::int AS month, limit_amount
+    `SELECT 
+        EXTRACT(MONTH FROM budget_month)::int AS month, 
+        COALESCE(SUM(limit_amount), 0) AS total_limit  -- Cộng dồn limit_amount
      FROM "expenseManagementApp".budgets
-     WHERE user_id = $1 AND EXTRACT(YEAR FROM budget_month)::int = $2`,
+     WHERE user_id = $1 AND EXTRACT(YEAR FROM budget_month)::int = $2
+     GROUP BY month`, 
     [userId, year]
   );
 
   const spentMap = new Map(spentQ.rows.map((r: any) => [r.month, parseFloat(r.spent)]));
-  const budgetMap = new Map(budgetQ.rows.map((r: any) => [r.month, parseFloat(r.limit_amount)]));
+  const budgetMap = new Map(budgetQ.rows.map((r: any) => [r.month, parseFloat(r.total_limit)]));
 
   const out = [];
   for (let m = 1; m <= 12; m++) {
     const spent = spentMap.get(m) || 0;
     const budget = budgetMap.get(m) || 0;
-    const overrun = (budget && spent > budget) ? (spent - budget) : 0;
+    const overrun = (budget > 0 && spent > budget) ? (spent - budget) : 0;
     out.push({ month: m, spent, budget, overrun });
   }
 

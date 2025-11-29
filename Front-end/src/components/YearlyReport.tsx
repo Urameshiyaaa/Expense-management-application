@@ -49,7 +49,7 @@ export const YearlyReport: React.FC<{ userId: number; year: number }> = ({ userI
           <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="monthLabel" />
-            <YAxis tickFormatter={(value) => `${value / 1000}k`} /> {/* Rút gọn số trục Y */}
+            <YAxis width={80} tickFormatter={(value) => value.toLocaleString()}/> 
             <Tooltip 
               formatter={(value: number) => `${value.toLocaleString()} VNĐ`}
               labelStyle={{ color: '#333', fontWeight: 'bold' }}
@@ -63,7 +63,7 @@ export const YearlyReport: React.FC<{ userId: number; year: number }> = ({ userI
             <Bar dataKey="spent" name="Thực chi" fill="#1890ff" radius={[4, 4, 0, 0]} maxBarSize={50} />
             
             {/* (Tùy chọn) Cột 3: Vượt mức (Màu đỏ) - Chỉ hiện khi có vượt */}
-             {/* <Bar dataKey="overrun" name="Vượt mức" fill="#ff4d4f" /> */}
+           <Bar dataKey="overrun" name="Vượt mức" fill="#ff4d4f" />
           </BarChart>
         </ResponsiveContainer>
       </div>
