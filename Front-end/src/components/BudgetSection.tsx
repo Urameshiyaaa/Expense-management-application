@@ -116,6 +116,15 @@ const BudgetSection = () => {
             </select>
 
             <input
+              onKeyDown={(ev) => {
+                if (ev.key === '-' || ev.key === 'e') { //Đức: Xử lí sự kiện khi người dùng nhập dấu âm và giá trị e
+                  ev.preventDefault();
+                }}}
+              onPaste={(evt) => {
+                const pasteData = evt.clipboardData.getData('text'); //Đức: Xử lí sự kiện khi người dùng copy paste giá trị âm/e từ bên ngoài
+                if (pasteData.includes('-') || pasteData.includes('e')) {
+                  evt.preventDefault();
+                }}}
               type='number'
               className="form-control"
               placeholder="Hạn mức (VNĐ)"
