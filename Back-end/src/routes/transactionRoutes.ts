@@ -37,7 +37,6 @@ router.post('/', async (req, res) => {
     );
     res.json(result.rows[0]);
   } catch (err) {
-    //Đức: log lỗi ra terminal back-end để fix
     console.error("LỖI SQL:", err);
     res.status(500).json({ error: (err as Error).message });
   }

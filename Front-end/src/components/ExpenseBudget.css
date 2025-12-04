@@ -130,16 +130,9 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 
-.list-box::-webkit-scrollbar {
-  width: 6px;
-}
-.list-box::-webkit-scrollbar-track {
-  background: transparent;
-}
-.list-box::-webkit-scrollbar-thumb {
-  background: #bdc3c7;
-  border-radius: 10px;
-}
+.list-box::-webkit-scrollbar {width: 6px;} /*Đức*/
+.list-box::-webkit-scrollbar-track {background: transparent;}
+.list-box::-webkit-scrollbar-thumb {background: #bdc3c7; border-radius: 10px;}
 
 .list-item {
   background: white;

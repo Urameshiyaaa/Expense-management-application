@@ -164,7 +164,7 @@
 .dashboard-cards.row { display:flex; }
 .dashboard-cards.column { display:flex; flex-direction:column; gap: 8px; }
 
-
+/*Đức: Thêm + design thanh cuộn khi danh mục dài*/
 .listCategory::-webkit-scrollbar {width: 8px;}
 .listCategory::-webkit-scrollbar-track {background: #f1f1f1; border-radius: 4px;}
 .listCategory::-webkit-scrollbar-thumb {background: #c1c1c1; border-radius: 4px;}

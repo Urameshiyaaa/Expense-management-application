@@ -158,14 +158,14 @@ const ExpenseSection = () => {
 
         <input
           type='number'
-          onKeyDown={(ev) => {
-            if (ev.key === '-' || ev.key === 'e') { //Đức: Xử lí sự kiện khi người dùng nhập dấu âm và giá trị e
-              ev.preventDefault();
+          onKeyDown={(event) => {
+            if (event.key === '-' || event.key === 'e') { //Đức: Xử lí sự kiện khi người dùng nhập dấu âm và giá trị e
+              event.preventDefault();
             }}}
-          onPaste={(evt) => {
-              const pasteData = evt.clipboardData.getData('text'); //Đức: Xử lí sự kiện khi người dùng copy paste giá trị âm/e từ bên ngoài
+          onPaste={(event) => {
+              const pasteData = event.clipboardData.getData('text'); //Đức: Xử lí sự kiện khi người dùng copy paste giá trị âm/e từ bên ngoài
               if (pasteData.includes('-') || pasteData.includes('e')) {
-                evt.preventDefault();
+                event.preventDefault();
               }}}
           className="form-control"
           placeholder="Số tiền (VNĐ)"

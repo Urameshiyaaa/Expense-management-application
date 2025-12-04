@@ -1,5 +1,5 @@
-import { googleLogout } from '@react-oauth/google';
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import {googleLogout} from '@react-oauth/google';
+import {createContext, useContext, useState, type ReactNode} from 'react';
 
 
 interface AuthUser {
@@ -44,7 +44,7 @@ export const Auth = (props: AuthProps) => {
    };
 
   return (
-    <AuthState.Provider value={{ authenticated, user, login, logout }}>
+    <AuthState.Provider value={{authenticated, user, login, logout}}>
       {props.children}
     </AuthState.Provider>
   );

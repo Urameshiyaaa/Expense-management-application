@@ -40,7 +40,7 @@ const ReportPage: React.FC = () => {
     <div style={{
           width: '100%',
           minHeight: '100vh',
-          backgroundImage:`linear-gradient(#516c8b80, #4f678580),url(${bgImage})`,
+          backgroundImage:`linear-gradient(#516c8b80, #4f678580),url(${bgImage})`, //Đức
           backgroundSize: 'cover',    
           backgroundRepeat: 'no-repeat',
           backgroundAttachment: 'fixed',

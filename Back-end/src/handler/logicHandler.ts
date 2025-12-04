@@ -1,8 +1,8 @@
-import type { Request, Response } from 'express';
+import type {Request, Response} from 'express';
 import {query} from '../database/dbAccess.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { OAuth2Client } from 'google-auth-library';
+import {OAuth2Client} from 'google-auth-library';
 import 'dotenv/config';
 
 
@@ -17,24 +17,24 @@ export const register = async (req: Request, res: Response) => {
     const {email, password, fullName} = req.body;
 
     if (password.length < 8) {
-      return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 8 kí tự.'});
+      return res.status(400).json({message: 'Mật khẩu phải có ít nhất 8 kí tự.'});
     }
     if (!/[A-Z]/.test(password)) {
-      return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 1 chữ in hoa.'});
+      return res.status(400).json({message: 'Mật khẩu phải có ít nhất 1 chữ in hoa.'});
     }
     if (!/[a-z]/.test(password)) {
-      return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 1 chữ in thường.'});
+      return res.status(400).json({message: 'Mật khẩu phải có ít nhất 1 chữ in thường.'});
     }
     if (!/[0-9]/.test(password)) {
-      return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 1 chữ số.'});
+      return res.status(400).json({message: 'Mật khẩu phải có ít nhất 1 chữ số.'});
     }
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-      return res.status(400).json({ message: 'Mật khẩu phải có ít nhất 1 kí tự đặc biệt.'});
+      return res.status(400).json({message: 'Mật khẩu phải có ít nhất 1 kí tự đặc biệt.'});
     }
 
     const existingUser = await query('SELECT * FROM "expenseManagementApp".users WHERE email = $1', [email]);
     if(existingUser.rows.length > 0){
-      return res.status(400).json({ message: 'Email đã tồn tại.' });
+      return res.status(400).json({message: 'Email đã tồn tại.'});
     }
     
     const salt = await bcrypt.genSalt(10);
@@ -56,7 +56,7 @@ export const login = async (req: Request, res: Response) => {
     
     const userResult = await query('SELECT * FROM "expenseManagementApp".users WHERE email = $1', [email]);
     if(userResult.rows.length === 0){
-      return res.status(404).json({ message: 'Email hoặc mật khẩu không đúng' });
+      return res.status(404).json({message: 'Email hoặc mật khẩu không tồn tại'});
     }
     
     const user = userResult.rows[0];
