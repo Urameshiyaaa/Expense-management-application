@@ -116,6 +116,7 @@ const BudgetSection = () => {
             </select>
 
             <input
+              type='number'
               className="form-control"
               placeholder="Hạn mức (VNĐ)"
               value={newBudget.limit_amount}

@@ -157,7 +157,16 @@ const ExpenseSection = () => {
         </select>
 
         <input
-          
+          type='number'
+          onKeyDown={(ev) => {
+            if (ev.key === '-' || ev.key === 'e') { //Đức: Xử lí sự kiện khi người dùng nhập dấu âm và giá trị e
+              ev.preventDefault();
+            }}}
+          onPaste={(evt) => {
+              const pasteData = evt.clipboardData.getData('text'); //Đức: Xử lí sự kiện khi người dùng copy paste giá trị âm/e từ bên ngoài
+              if (pasteData.includes('-') || pasteData.includes('e')) {
+                evt.preventDefault();
+              }}}
           className="form-control"
           placeholder="Số tiền (VNĐ)"
           value={newTran.amount}
