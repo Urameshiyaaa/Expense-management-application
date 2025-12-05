@@ -21,11 +21,12 @@ interface Category {
 const ExpenseSection = () => {
   // ... (Giữ nguyên toàn bộ phần Logic/State/Effect/Functions)
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]); //Đức
   const [newTran, setNewTran] = useState({ category_id: '', amount: '', note: '', transaction_date: '' });
   const [editing, setEditing] = useState<any>(null);
   const { user } = useAuth();
-
+  
+  //Đức: Quản Lý danh mục
   const [displayListCategory, setDisplayListCategory] = useState(false);
   const [categoryInput, setCategoryInput] = useState('');
   const [editCategoryId, setEditCategoryId] = useState<number | null>(null);
@@ -37,11 +38,13 @@ const ExpenseSection = () => {
     }
   }, [user]);
 
+  //Đức: Xử lí hiển thị toàn bộ danh mục hiện có
   const fetchCategories = async () => {
     try {
       const res = await categoryApi.getAll();
       setCategories(res.data);
-    } catch (err) {
+    } 
+    catch (err) {
       console.error("Lỗi lấy category:", err);
     }
   };
@@ -95,13 +98,15 @@ const ExpenseSection = () => {
     setEditing({ ...tran });
   };
 
+  //Đức: Xử lí thay đổi danh mục (hết cái startEditCategory)
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
     if (value === 'other') {
       setDisplayListCategory(true);
-      setNewTran({ ...newTran, category_id: '' });
-    } else {
-      setNewTran({ ...newTran, category_id: value });
+      setNewTran({...newTran, category_id: ''});
+    } 
+    else{
+      setNewTran({...newTran, category_id: value});
     }
   };
 
@@ -109,14 +114,16 @@ const ExpenseSection = () => {
     if (!categoryInput.trim()) return alert("Tên không được để trống");
     try {
       if (editCategoryId) {
-        await categoryApi.update(editCategoryId, { name: categoryInput });
+        await categoryApi.update(editCategoryId, {name: categoryInput});
         setEditCategoryId(null);
-      } else {
-        await categoryApi.create({ name: categoryInput });
+      } 
+      else{
+        await categoryApi.create({name: categoryInput});
       }
       setCategoryInput('');
       fetchCategories();
-    } catch (err) {
+    } 
+    catch (err){
       console.error(err);
     }
   };
@@ -126,7 +133,8 @@ const ExpenseSection = () => {
     try {
       await categoryApi.delete(id);
       fetchCategories();
-    } catch (err) {
+    } 
+    catch (err){
       console.error(err);
       alert("Không xóa được (có thể đang có dữ liệu liên quan)");
     }
@@ -142,7 +150,7 @@ const ExpenseSection = () => {
     <section className="section-box">
       <h3>📘 Quản lý Khoản chi</h3>
       
-      {/* Form thêm mới */}
+      {/* Đức: Quản lý danh mục*/}
       <div className="form-box">
         <select
           className="form-control"
@@ -153,7 +161,7 @@ const ExpenseSection = () => {
           {categories.map((c) => (
             <option key={c.category_id} value={c.category_id}>{c.name}</option>
           ))}
-          <option value="other" style={{color: '#2d3436'}}>Khác...</option>
+          <option value="other" style={{color:'#2d3436'}}>Khác...</option>
         </select>
 
         <input
@@ -244,7 +252,7 @@ const ExpenseSection = () => {
         ))}
       </ul>
 
-      {/* Modal Quản lý Danh mục */}
+      {/*Đức: Hiển thị giao diện chỉnh sửa danh mục*/}
       {displayListCategory && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -257,11 +265,9 @@ const ExpenseSection = () => {
                 onChange={(e) => setCategoryInput(e.target.value)}
                 placeholder="Nhập tên danh mục..."
               />
-              <button className="btn btn-primary" onClick={saveCategory}>
-                {editCategoryId ? 'Lưu' : 'Thêm'}
-              </button>
+              <button className="btn btn-primary" onClick={saveCategory}>{editCategoryId ? 'Lưu' : 'Thêm'}</button>
               {editCategoryId && (
-                <button className="btn btn-danger" onClick={() => { setEditCategoryId(null); setCategoryInput(''); }}>Hủy</button>
+                <button className="btn btn-danger" onClick={() => {setEditCategoryId(null); setCategoryInput(''); }}>Hủy</button>
               )}
             </div>
 
@@ -277,7 +283,7 @@ const ExpenseSection = () => {
               ))}
             </ul>
 
-            <button className="btn btn-sm" style={{ marginTop: '20px', width: '100%', background: '#636e72', color: 'white' }} onClick={() => setDisplayListCategory(false)}>
+            <button className="btn btn-sm" style={{marginTop: '20px', width: '100%', background: '#636e72', color: 'white'}} onClick={() => setDisplayListCategory(false)}>
               Đóng
             </button>
           </div>
