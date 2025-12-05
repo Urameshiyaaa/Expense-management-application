@@ -7,10 +7,15 @@ const Header = () => {
   const {logout, user} = useAuth();
   const [displaySidebar, setDisplaySidebar] = useState(false);
 
-  const Logout = () => {
-    if (window.confirm('Bạn có muốn đăng xuất không?')) {
-      logout();
-    }
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  const clickAvatar = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const confirmLogout = () => {
+    logout();
+    setShowLogoutConfirm(false);
   };
 
   const handleSidebar = () => {
@@ -36,7 +41,7 @@ const Header = () => {
               src="https://static.wikitide.net/projectsekaiwiki/thumb/f/f6/Haruka_Casual_chibi.png/180px-Haruka_Casual_chibi.png" 
               alt="User Avatar" 
               className="user-avt" 
-              onClick={Logout}
+              onClick={clickAvatar}
               title="Nhấn để đăng xuất"
             />
           )}
@@ -44,7 +49,7 @@ const Header = () => {
           {user && !user.avatar_url && (
             <div 
               className="user-avt-text" 
-              onClick={Logout}
+              onClick={clickAvatar}
               title="Nhấn để đăng xuất"
             >
              {user.full_name ? user.full_name[0].toUpperCase() : 'U'}
@@ -84,6 +89,38 @@ const Header = () => {
         </ul>
 
       </nav>
+
+
+      {showLogoutConfirm && (
+        <div className="fixed inset-0 z-[2006] flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-[90%] max-w-[400px]">
+            
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Đăng xuất?</h3>
+              <p className="text-sm text-gray-500">
+                Bạn có chắc chắn muốn đăng xuất khỏi tài khoản <br/>
+                <span className="font-bold text-gray-800">{user?.full_name || user?.email}</span> không?
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setShowLogoutConfirm(false)}
+                className="flex-1 px-4 py-2.5 hover:text-[red] font-medium text-sm"
+              >
+                Hủy bỏ
+              </button>
+              <button 
+                onClick={confirmLogout}
+                className="flex-1 px-4 py-2.5 hover:text-[red] font-medium text-sm"
+              >
+                Đăng xuất ngay
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
   </>
   );
