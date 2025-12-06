@@ -6,6 +6,9 @@ import { useAuth } from '../authentication/AuthState';
 import Header from './Header/Header';
 import bgImage from '../others/Illustration/MizukiAkiyama.jpg';
 import Footer from './Footer/Footer';
+import Notification from './Notification';
+import {NumericFormat} from 'react-number-format'; //Đức: Thêm thư viện xử lí format tiền
+
 
 interface Budget {
   budget_id: number;
@@ -26,6 +29,8 @@ const BudgetSection = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [newBudget, setNewBudget] = useState({ limit_amount: '', budget_month: '', category_id: '' });
   const { user } = useAuth();
+
+  const [showNotif, setShowNotif] = useState<string | null>(null); //Đức
 
   useEffect(() => {
     if (user) {
@@ -61,6 +66,8 @@ const BudgetSection = () => {
       await budgetApi.create({ ...newBudget, user_id: user.user_id });
       fetchBudgets();
       setNewBudget({ limit_amount: '', budget_month: '', category_id: '' });
+
+      setShowNotif("Thêm thành công"); //Đức
     } catch (err) {
       console.error(err);
     }
@@ -115,21 +122,17 @@ const BudgetSection = () => {
               ))}
             </select>
 
-            <input
-              onKeyDown={(event) => {
-                if (event.key === '-' || event.key === 'e') { //Đức: Xử lí sự kiện khi người dùng nhập dấu âm và giá trị e
-                  event.preventDefault();
-                }}}
-              onPaste={(event) => {
-                const pasteData = event.clipboardData.getData('text'); //Đức: Xử lí sự kiện khi người dùng copy paste giá trị âm/e từ bên ngoài
-                if (pasteData.includes('-') || pasteData.includes('e')) {
-                  event.preventDefault();
-                }}}
-              type='number'
-              className="form-control"
-              placeholder="Hạn mức (VNĐ)"
+            <NumericFormat
+              className="form-control"  //Đức: Dùng thư viện xử lí format tiền thay cho code chay như version trước
+              placeholder="Số tiền (VNĐ)"
               value={newBudget.limit_amount}
-              onChange={e => setNewBudget({ ...newBudget, limit_amount: e.target.value })}
+              thousandSeparator="."
+              decimalSeparator=","
+              allowNegative={false} 
+              onValueChange={(values) => {
+                const {value} = values;  
+                setNewBudget({ ...newBudget, limit_amount: value });
+              }}
             />
 
             <input
@@ -180,7 +183,14 @@ const BudgetSection = () => {
           </ul>
         </section>
       </div>
-
+          {/*Đức: Xử lí hiển thị thông báo*/}
+      {showNotif && (
+        <Notification 
+          message={showNotif} 
+          onClose={() => setShowNotif(null)} 
+        />
+      )}
+      
       <Footer />
     </div>
   );

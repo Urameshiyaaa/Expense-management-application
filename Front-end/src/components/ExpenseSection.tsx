@@ -3,6 +3,8 @@ import transactionApi from '../API/transactionApi';
 import categoryApi from '../API/categoryApi';
 import './ExpenseBudget.css';
 import { useAuth } from '../authentication/AuthState';
+import Notification from './Notification';
+import {NumericFormat} from 'react-number-format'; //Đức: Thêm thư viện xử lí format tiền
 
 // ... (Giữ nguyên phần Interface)
 interface Transaction {
@@ -30,6 +32,8 @@ const ExpenseSection = () => {
   const [displayListCategory, setDisplayListCategory] = useState(false);
   const [categoryInput, setCategoryInput] = useState('');
   const [editCategoryId, setEditCategoryId] = useState<number | null>(null);
+  //Đức: Xử lí hiển thị thông báo
+  const [showNotif, setShowNotif] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -69,6 +73,7 @@ const ExpenseSection = () => {
       await transactionApi.create({ ...newTran, user_id: user.user_id });
       fetchTransactions();
       setNewTran({ category_id: '', amount: '', note: '', transaction_date: '' });
+      setShowNotif("Thêm thành công"); //Đức
     } catch (err) {
       console.error(err);
     }
@@ -80,6 +85,7 @@ const ExpenseSection = () => {
       await (transactionApi as any).update(editing.transaction_id, editing);
       fetchTransactions();
       setEditing(null);
+      setShowNotif('Sửa thành công') //Đức
     } catch (err) {
       console.error(err);
     }
@@ -164,21 +170,17 @@ const ExpenseSection = () => {
           <option value="other" style={{color:'#2d3436'}}>Khác...</option>
         </select>
 
-        <input
-          type='number'
-          onKeyDown={(event) => {
-            if (event.key === '-' || event.key === 'e') { //Đức: Xử lí sự kiện khi người dùng nhập dấu âm và giá trị e
-              event.preventDefault();
-            }}}
-          onPaste={(event) => {
-              const pasteData = event.clipboardData.getData('text'); //Đức: Xử lí sự kiện khi người dùng copy paste giá trị âm/e từ bên ngoài
-              if (pasteData.includes('-') || pasteData.includes('e')) {
-                event.preventDefault();
-              }}}
-          className="form-control"
+        <NumericFormat 
+          className="form-control"  //Đức: Dùng thư viện xử lí format tiền thay cho code chay như version trước
           placeholder="Số tiền (VNĐ)"
           value={newTran.amount}
-          onChange={e => setNewTran({ ...newTran, amount: e.target.value })}
+          thousandSeparator="."
+          decimalSeparator=","
+          allowNegative={false} 
+          onValueChange={(values) => {
+            const {value} = values; 
+            setNewTran({ ...newTran, amount: value});
+          }}
         />
         <input
           className="form-control"
@@ -202,8 +204,7 @@ const ExpenseSection = () => {
         {transactions.map(t => (
           <li key={t.transaction_id}>
             {editing && editing.transaction_id === t.transaction_id ? (
-              // Form Sửa (Inline Edit) - Tận dụng lại class form-box nhưng thu gọn
-              <div className='form-box' style={{ margin: 0, padding: '10px', background: '#f8f9fa', borderRadius: '10px' }}>
+              <div className='form-box' style={{margin: 0, padding: '10px', background: '#f8f9fa', borderRadius: '10px'}}>
                 <select
                   className="form-control"
                   value={editing.category_id}
@@ -214,7 +215,18 @@ const ExpenseSection = () => {
                     <option key={cat.category_id} value={cat.category_id}>{cat.name}</option>
                   ))}
                 </select>
-                <input className="form-control" type="number" value={editing.amount} onChange={e => setEditing({ ...editing, amount: e.target.value })} />
+                
+                <NumericFormat
+                  className="form-control" //Đức
+                  value={editing.amount}
+                  thousandSeparator="."
+                  decimalSeparator=","
+                  allowNegative={false}
+                  onValueChange={(values) => {
+                    const {value} = values;
+                    setEditing({...editing, amount: value});
+                  }}
+                />
                 <input className="form-control" value={editing.note} onChange={e => setEditing({ ...editing, note: e.target.value })} />
                 <input className="form-control" type="datetime-local" value={editing.transaction_date} onChange={e => setEditing({ ...editing, transaction_date: e.target.value })} />
                 
@@ -289,6 +301,14 @@ const ExpenseSection = () => {
           </div>
         </div>
       )}
+      {/*Đức: xử lí hiển thị thông báo */}
+      {showNotif && (
+        <Notification 
+          message={showNotif} 
+          onClose={() => setShowNotif(null)} 
+        />
+      )}
+
     </section>
   );
 };

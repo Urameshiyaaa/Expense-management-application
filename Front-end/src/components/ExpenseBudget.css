@@ -55,7 +55,7 @@
 
 .form-control:focus {
   border-color: var(--primary-color);
-  background-color: rgb(166, 166, 166);
+  background-color: rgb(166, 166, 166); /*Đức*/
   box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
 }
 
@@ -116,6 +116,7 @@ input[type=number]::-webkit-inner-spin-button {
   font-size: 12px;
   border-radius: 8px;
 }
+
 
 
 .list-box {
