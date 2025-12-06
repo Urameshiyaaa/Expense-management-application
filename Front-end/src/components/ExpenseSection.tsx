@@ -3,7 +3,8 @@ import transactionApi from '../API/transactionApi';
 import categoryApi from '../API/categoryApi';
 import './ExpenseBudget.css';
 import { useAuth } from '../authentication/AuthState';
-import Notification from './Notification';
+import Notification from './Notification/NotificationS';
+import NotificationF from './Notification/NotificationF';
 import {NumericFormat} from 'react-number-format'; //Đức: Thêm thư viện xử lí format tiền
 
 // ... (Giữ nguyên phần Interface)
@@ -34,6 +35,8 @@ const ExpenseSection = () => {
   const [editCategoryId, setEditCategoryId] = useState<number | null>(null);
   //Đức: Xử lí hiển thị thông báo
   const [showNotif, setShowNotif] = useState<string | null>(null);
+  const [showNotifFail, setShowNotifFail] = useState<string | null>(null);
+
 
   useEffect(() => {
     if (user) {
@@ -67,7 +70,7 @@ const ExpenseSection = () => {
   };
 
   const addTransaction = async () => {
-    if (!newTran.category_id || !newTran.amount || !newTran.transaction_date) return alert('Nhập đủ thông tin!');
+    if (!newTran.category_id || !newTran.amount || !newTran.transaction_date) return setShowNotifFail('Thêm thất bại. Chưa nhập đủ thông tin');
     if (!user) return;
     try {
       await transactionApi.create({ ...newTran, user_id: user.user_id });
@@ -95,6 +98,7 @@ const ExpenseSection = () => {
     try {
       await transactionApi.delete(id);
       fetchTransactions();
+      setShowNotif('Xóa thành công') //Đức
     } catch (err) {
       console.error(err);
     }
@@ -117,14 +121,16 @@ const ExpenseSection = () => {
   };
 
   const saveCategory = async () => {
-    if (!categoryInput.trim()) return alert("Tên không được để trống");
+    if (!categoryInput.trim()) return setShowNotifFail('Lưu thất bại. Tên không được để trống');
     try {
       if (editCategoryId) {
         await categoryApi.update(editCategoryId, {name: categoryInput});
         setEditCategoryId(null);
+        setShowNotif('Lưu thành công.');
       } 
       else{
         await categoryApi.create({name: categoryInput});
+         setShowNotif('Thêm thành công.')
       }
       setCategoryInput('');
       fetchCategories();
@@ -135,10 +141,10 @@ const ExpenseSection = () => {
   };
 
   const deleteCategory = async (id: number) => {
-    if (!window.confirm("Chắc chắn xóa danh mục này?")) return;
     try {
       await categoryApi.delete(id);
       fetchCategories();
+      setShowNotif('Xóa thành công.') //Đức
     } 
     catch (err){
       console.error(err);
@@ -215,7 +221,7 @@ const ExpenseSection = () => {
                     <option key={cat.category_id} value={cat.category_id}>{cat.name}</option>
                   ))}
                 </select>
-                
+
                 <NumericFormat
                   className="form-control" //Đức
                   value={editing.amount}
@@ -308,7 +314,13 @@ const ExpenseSection = () => {
           onClose={() => setShowNotif(null)} 
         />
       )}
-
+      {showNotifFail && (
+        <NotificationF 
+          message={showNotifFail} 
+          onClose={() => setShowNotifFail(null)} 
+        />
+      )}
+      
     </section>
   );
 };

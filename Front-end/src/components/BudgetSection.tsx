@@ -6,7 +6,8 @@ import { useAuth } from '../authentication/AuthState';
 import Header from './Header/Header';
 import bgImage from '../others/Illustration/MizukiAkiyama.jpg';
 import Footer from './Footer/Footer';
-import Notification from './Notification';
+import Notification from './Notification/NotificationS';
+import NotificationF from './Notification/NotificationF';
 import {NumericFormat} from 'react-number-format'; //Đức: Thêm thư viện xử lí format tiền
 
 
@@ -31,6 +32,7 @@ const BudgetSection = () => {
   const { user } = useAuth();
 
   const [showNotif, setShowNotif] = useState<string | null>(null); //Đức
+  const [showNotifFail, setShowNotifFail] = useState<string | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -60,7 +62,7 @@ const BudgetSection = () => {
 
   const addBudget = async () => {
     if (!newBudget.limit_amount || !newBudget.budget_month || !newBudget.category_id) {
-      return alert('Vui lòng nhập đủ thông tin (Tiền, Tháng, Danh mục)!');
+      setShowNotifFail("Thêm thất bại. Chưa nhập đủ thông tin")
     }
     try {
       await budgetApi.create({ ...newBudget, user_id: user.user_id });
@@ -188,6 +190,12 @@ const BudgetSection = () => {
         <Notification 
           message={showNotif} 
           onClose={() => setShowNotif(null)} 
+        />
+      )}
+      {showNotifFail && (
+        <NotificationF 
+          message={showNotifFail} 
+          onClose={() => setShowNotifFail(null)} 
         />
       )}
       

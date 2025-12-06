@@ -9,11 +9,10 @@ interface Notif {
 const Notification: React.FC<Notif> = ({message, onClose}) => {
   
   useEffect(() => {
-    const timer = setTimeout(() => {
-      onClose();
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, [onClose]);
+      setTimeout(() => {
+        onClose();
+      }, 2000);
+    }, [onClose]);
 
   return (
     <div className="fixed top-7 left-69 z-[2006] flex items-center w-full max-w-[222px] p-2 text-gray-500 bg-white rounded-lg shadow-lg animation" >
