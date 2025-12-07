@@ -83,7 +83,7 @@ const ExpenseSection = () => {
   };
 
   const updateTransaction = async () => {
-    if (!editing || !editing.category_id || !editing.amount || !editing.transaction_date) return alert('Nhập đủ thông tin!');
+    if (!editing || !editing.category_id || !editing.amount || !editing.transaction_date) return setShowNotifFail('Lưu thất bại. Chưa nhập đủ thông tin');
     try {
       await (transactionApi as any).update(editing.transaction_id, editing);
       fetchTransactions();

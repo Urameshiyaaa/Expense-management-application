@@ -91,7 +91,7 @@
   font-size: 17px;
   padding: 14px 16px;
   border-radius: 6px;
-  border: 1px solid #dddfe2;
+  border: 1px solid #a9a5a5;
   box-sizing: border-box;
 }
 
@@ -115,7 +115,7 @@
 
 hr {
   border: none;
-  border-top: 1px solid #dadde1;
+  border-top: 1px solid #aeb1b3;
   margin: 20px 0;
 }
 

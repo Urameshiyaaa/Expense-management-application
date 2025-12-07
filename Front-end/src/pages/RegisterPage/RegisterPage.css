@@ -71,7 +71,7 @@
   font-size: 16px;
   padding: 14px 16px;
   border-radius: 8px;
-  border: 1px solid #dddfe2;
+  border: 1px solid #afafb0;
   box-sizing: border-box;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -99,7 +99,7 @@
 
 .divider {
   border: none;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid #afb2b5;
   margin: 24px 0;
 }
 
